@@ -14,7 +14,7 @@ flags.N_subcarr = 64;    % number of sub carriers
 flags.N_cp = 16;         % length of Cyclic prefix length
 % [AWGN Settings]
 flags.AWGN = 1;          % shall we turn on the AWGN channel ? 1-yes;0-no
-flags.EbN0 = -20:30;     % EbN0 interval
+flags.EbN0 = -20:300;     % EbN0 interval
 % [MPC settings]
 ht = load('impulse_response.mat');
 flags.MPCht = ht.ht;
@@ -28,6 +28,11 @@ flags.tdEQ = 0; % switch for time domain equalisation : 0-OFF/ 1-ON
 flags.STO = 1; % switch for STO: 0-OFF / 1-ON
 flags.timeshift = 1; % set the time shifting (unit:[bit])
 flags.N_averageWindow = flags.N_cp*2;
+% [CFO]
+flags.CFO = 0; % switch for CFO: 0-OFF/ 1-ON
+flags.f_tx = 10; % transmitter frequency shift unit[Hz]
+flags.pilot_channel = [-21,-7,7,21];
+
 
 %% [Transmitter]
 [symbol_cp_s, bits_tx] = SISO_transmitter(flags);
@@ -85,7 +90,7 @@ grid on
 %% [Channel + receiver] scan through the STO
 flags.MPCchoice = 1; % the choice for MPC model: 0:LOS; 1:NLOS; -1:No channel
 flags.AWGN = 1; 
-flags.EbN0i = 40;
+flags.EbN0i = 50;
 flags.STO = 1; % turn on the STO
 
 disp('Scanning the STO, A little bit patience is required...')
@@ -101,7 +106,7 @@ for ii=1:length(N_shift)
     % [Channel] AWGN
     [ach_bits] = SISO_channel(symbol_cp_s, flags);
     % [Receiver] - Time acquisition
-    [t_est, ach_bits] = SISO_estimate_STO(ach_bits, flags);
+    % [t_est, ach_bits] = SISO_estimate_STO(ach_bits, flags);
     % [Receiver] - Channel Estimation 
     if flags.preamble_yes == 1
         % [Receiver - Estimate the channel]
@@ -125,7 +130,7 @@ for ii=1:length(N_shift)
 end
 
 figure(1)
-semilogy(N_shift, BER,'-gx');
+semilogy(N_shift, BER,'-ro');
 hold on;    
 xlabel('Shift samples (bit)');
 ylabel('Bit Error Rate (BER)');
@@ -138,25 +143,27 @@ grid on
 
 %% backup
 %% Test
-% ii = 20;
-% flags.timeshift = -50;
-% [ach_bits] = SISO_channel(symbol_cp_s, flags);
-% % [Receiver] - Time acquisition
-% [t_est, ach_bits] = SISO_estimate_STO(ach_bits, flags);
-% % [Receiver] - Channel Estimation 
-% if flags.preamble_yes == 1
-%     % [Receiver - Estimate the channel]
-%     % estimating in frequency domain
-%     [hf_est] = SISO_ZF_estimator(ach_bits, flags);
-%     % estimating in time domain
-%     [ht_est] = SISO_TD_estimator(ach_bits, flags);
-%     flags.MPCZF = hf_est;
-%     flags.MPCTD = ht_est;
-%     % extract the preamble from the signals
-%     ach_bits = ach_bits(1,(flags.N_subcarr+flags.N_cp)*2+1: end);
-% end
-% % [Receiver] - Equalisation
-% [arec_bits] = SISO_receiver(ach_bits, flags, 0);
-% % [Result]
-% bits_rx = arec_bits;
-% howcorrect=(bits_tx==bits_rx);        % check the original signal and the processed signal is equal or not
+flags.EbN0i = 300;
+flags.timeshift = 10;
+[ach_bits] = SISO_channel(symbol_cp_s, flags);
+% [Receiver] - Time acquisition
+[t_est, ach_bits] = SISO_estimate_STO(ach_bits, flags);
+t_est
+figure(1); hold on; plot(abs(ach_bits(1000:1200)), 'b-x');
+% [Receiver] - Channel Estimation 
+if flags.preamble_yes == 1
+    % [Receiver - Estimate the channel]
+    % estimating in frequency domain
+    [hf_est] = SISO_ZF_estimator(ach_bits, flags);
+    % estimating in time domain
+    [ht_est] = SISO_TD_estimator(ach_bits, flags);
+    flags.MPCZF = hf_est;
+    flags.MPCTD = ht_est;
+    % extract the preamble from the signals
+    ach_bits = ach_bits(1,(flags.N_subcarr+flags.N_cp)*2+1: end);
+end
+% [Receiver] - Equalisation
+[arec_bits] = SISO_receiver(ach_bits, flags, 0);
+% [Result]
+bits_rx = arec_bits;
+howcorrect=(bits_tx==bits_rx);        % check the original signal and the processed signal is equal or not

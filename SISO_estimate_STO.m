@@ -10,6 +10,7 @@ function [t_est, out_ach_bits] = SISO_estimate_STO(ach_bits, flags)
 len_bits = length(ach_bits);
 arr_shift = [-2*flags.N_subcarr: 2*flags.N_subcarr];
 
+% calculate the auto-correlation
 len_arr_shift = length(arr_shift);
 arr_corr = zeros(1, len_arr_shift);
 for ii=1:len_arr_shift
@@ -31,9 +32,9 @@ t_est = -(arr_shift(ind_)) - flags.N_averageWindow/2 - flags.N_cp;
 % plot(arr_shift,abs(arr_corr_ma))
 
 % compensate the STO
-out_ach_bits = ach_bits';
-out_ach_bits = circshift(out_ach_bits, t_est);
-out_ach_bits = out_ach_bits';
+out_ach_bits = ach_bits.';
+out_ach_bits = circshift(out_ach_bits, -t_est);
+out_ach_bits = out_ach_bits.';
 
 end
 

@@ -42,13 +42,13 @@ else
     ach_bits = anoise_bits;
 end
 
+
 %% Possible Time shifting
 if flags.STO == 1
     ach_bits = ach_bits';
     ach_bits = circshift(ach_bits, flags.timeshift);
     ach_bits = ach_bits';
 end
-
 %% Possible CFO
 if flags.CFO == 1
     n_bits = length(ach_bits);
