@@ -101,30 +101,30 @@ grid on
 % => pi = 2*pi*f_max*N*T_s -> that is the limitation
 
 %% Test
-flags.EbN0i = 300;
-flags.f_tx = 100; % transmitter frequency shift unit[Hz]
-[ach_bits] = SISO_channel(symbol_cp_s, flags);
-
-% [Receiver] - Time acquisition
-[t_est, ach_bits] = SISO_estimate_STO(ach_bits, flags);
-% [Receiver] - CFO acquisition
-[df_est, ach_bits] = SISO_estimate_CFO(ach_bits, flags);
-df_est_show = df_est
-% [Receiver] - Channel Estimation 
-if flags.preamble_yes == 1
-    % [Receiver - Estimate the channel]
-    % estimating in frequency domain
-    [hf_est] = SISO_ZF_estimator(ach_bits, flags);
-    % estimating in time domain
-    [ht_est] = SISO_TD_estimator(ach_bits, flags);
-    flags.MPCZF = hf_est;
-    flags.MPCTD = ht_est;
-    % extract the preamble from the signals
-    ach_bits = ach_bits(1,(flags.N_subcarr+flags.N_cp)*2+1: end);
-end
-% [Receiver] - Equalisation
-[arec_bits] = SISO_receiver(ach_bits, flags, 1);
-% [Result]
-bits_rx = arec_bits;
-howcorrect=(bits_tx==bits_rx);        % check the original signal and the processed signal is equal or not
-BER = 1-(sum(howcorrect)/flags.Nbits)
+% flags.EbN0i = 300;
+% flags.f_tx = 100; % transmitter frequency shift unit[Hz]
+% [ach_bits] = SISO_channel(symbol_cp_s, flags);
+% 
+% % [Receiver] - Time acquisition
+% [t_est, ach_bits] = SISO_estimate_STO(ach_bits, flags);
+% % [Receiver] - CFO acquisition
+% [df_est, ach_bits] = SISO_estimate_CFO(ach_bits, flags);
+% df_est_show = df_est
+% % [Receiver] - Channel Estimation 
+% if flags.preamble_yes == 1
+%     % [Receiver - Estimate the channel]
+%     % estimating in frequency domain
+%     [hf_est] = SISO_ZF_estimator(ach_bits, flags);
+%     % estimating in time domain
+%     [ht_est] = SISO_TD_estimator(ach_bits, flags);
+%     flags.MPCZF = hf_est;
+%     flags.MPCTD = ht_est;
+%     % extract the preamble from the signals
+%     ach_bits = ach_bits(1,(flags.N_subcarr+flags.N_cp)*2+1: end);
+% end
+% % [Receiver] - Equalisation
+% [arec_bits] = SISO_receiver(ach_bits, flags, 1);
+% % [Result]
+% bits_rx = arec_bits;
+% howcorrect=(bits_tx==bits_rx);        % check the original signal and the processed signal is equal or not
+% BER = 1-(sum(howcorrect)/flags.Nbits)

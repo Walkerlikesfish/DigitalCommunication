@@ -6,7 +6,7 @@ function [arec_bits] = f_SISO_simulation(symbol_cp_s, flags)
 [ach_bits] = SISO_channel(symbol_cp_s, flags);
 % [Receiver] - Time acquisition
 if flags.STO
-    [t_est, ach_bits] = SISO_estimate_STO(ach_bits, flags);
+    %[t_est, ach_bits] = SISO_estimate_STO(ach_bits, flags);
 end
 % [Receiver] - CFO acquisition
 if flags.CFO
