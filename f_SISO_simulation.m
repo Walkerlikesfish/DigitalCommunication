@@ -26,7 +26,7 @@ if flags.preamble_yes == 1
     ach_bits = ach_bits(1,(flags.N_subcarr+flags.N_cp)*2+1: end);
 end
 % [Receiver] - Equalisation
-[arec_bits] = SISO_receiver(ach_bits, flags, 0);
+[arec_bits] = SISO_receiver(ach_bits, flags, 1);
 
 end
 

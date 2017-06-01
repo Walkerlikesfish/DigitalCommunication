@@ -12,7 +12,7 @@ for ir = 1 : N_line
           curBin = Data{ir}{icol}{iz};
           curBin_f = curBin .* rec_f;
           curBin_f(ceil(mid-N_bins_f/2):floor(mid+N_bins_f/2)) = curBin_f(ceil(mid-N_bins_f/2):floor(mid+N_bins_f/2)) .* cur_lpf; % apply the lpf
-          curHt = ifft(curBin_f);
+          curHt = ifft(curBin_f) .* sqrt(N_bins);
           curHt = downsample(curHt, 10);
           HtMat_f(ir,icol,iz,:) = curHt; % normalisation
       end

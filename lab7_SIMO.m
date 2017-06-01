@@ -157,7 +157,6 @@ hold on;
 xlabel('Eb/N0 (dB)');
 ylabel('Bit Error Rate (BER)');
 title('BER vs EbN0');
-legend('Modulation 64QAM');
 grid on   
 
 %% SISO
@@ -196,7 +195,6 @@ hold on;
 xlabel('Eb/N0 (dB)');
 ylabel('Bit Error Rate (BER)');
 title('BER vs EbN0');
-legend('Modulation 64QAM');
 grid on   
 
 %% [Test] 

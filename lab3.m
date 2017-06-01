@@ -55,13 +55,23 @@ for ii=1:length(flags.EbN0)
 end
 
 % figure
-semilogy(flags.EbN0, BER,'-xg');
+semilogy(flags.EbN0, BER,'-ob');
 hold on;    
 xlabel('Eb/N0 (dB)');
 ylabel('Bit Error Rate (BER)');
 title('BER vs EbN0');
 legend('Modulation 64QAM');
 grid on   
+
+%% Test
+ii = 70;
+flags.EbN0i = ii;
+flags.EbN0(ii)
+arec_bits = f_SISO_simulation(symbol_cp_s, flags);
+bits_rx = arec_bits;
+howcorrect=(bits_tx==bits_rx);        % check the original signal and the processed signal is equal or not
+BER(ii)=1-(sum(howcorrect)/flags.Nbits);    % Bit Error Rate (BER)
+title('Constellation with CP (EbN0=20dB)')
 
 %% Questions
 % [1] why in practice we do not use the centre frequency <- cuz when

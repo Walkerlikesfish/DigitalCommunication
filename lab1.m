@@ -18,6 +18,12 @@ flags.BW2_prop = 0.1; % the propotion for the pre_LPF
 % selecting the filter: 0-Rectangular; 1-Tuckey(Recommend)
 flags.LPFfilter = 1;
 
+% Basic measurement parameters
+flags.dist_int = 0.02;
+flags.fc = 2.35e9;
+flags.vc = 3e8;
+flags.lamda = flags.vc/flags.fc;
+
 % Load datas
 data_LOS = load('LOS_2017.mat');
 data_NLOS = load('NLOS_2017.mat');
@@ -25,6 +31,25 @@ data_NLOS = load('NLOS_2017.mat');
 disp('------------------------------------');
 disp('Initialise finished!');
 disp('------------------------------------');
+
+%% Plot the local area - Narrowband
+HtMat_NLOS = ifft_3dmat(data_NLOS.Data, flags.N_line, flags.N_bins);
+% calculate PDP
+[HtMatAmp_NLOS, ~] = calc_PDP(HtMat_NLOS, flags.N_line, flags.N_bins);
+HtMatAmp_NLOS = sum(HtMatAmp_NLOS, 3);
+HtMatAmp_NLOS = squeeze(sum(HtMatAmp_NLOS, 4));
+ht_toplot_NLOS = squeeze(10*log10(HtMatAmp_NLOS));
+
+HtMat_LOS = ifft_3dmat(data_LOS.Data, flags.N_line, flags.N_bins);
+% calculate PDP
+[HtMatAmp_LOS, ~] = calc_PDP(HtMat_LOS, flags.N_line, flags.N_bins);
+HtMatAmp_LOS = sum(HtMatAmp_LOS, 3);
+HtMatAmp_LOS = squeeze(sum(HtMatAmp_LOS, 4));
+ht_toplot_LOS = squeeze(10*log10(HtMatAmp_LOS));
+
+axis_in_lamda = (1:1:flags.N_line) .* flags.dist_int ./ flags.lamda;
+figure(1); surf(axis_in_lamda,axis_in_lamda,ht_toplot_LOS); title('LOS h(t) (dB) in local area');
+figure(2); surf(axis_in_lamda,axis_in_lamda,ht_toplot_NLOS); title('NLOS h(t) (dB) in local area');
 
 %% 200Mhz Coherence Frequency estimation
 [f_cohr_LOS, PDP_LOS] = calc_coherf_raw(data_LOS.Data, flags);

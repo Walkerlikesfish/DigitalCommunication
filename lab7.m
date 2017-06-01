@@ -34,14 +34,21 @@ disp('------------------------------------');
 %% Get the Wideband domain - LOS
 [HtMat_LOS] = get_wideBand_reduceBW(data_LOS.Data, flags);
 a_n_mat_LOS = calc_a_n(HtMat_LOS, flags);
-plotImage(flags.phi, flags.theta, 20*log10(abs(a_n_mat_LOS(:,:,1))), [-40; -100])
+a_n_toplot = 20*log10(abs(a_n_mat_LOS(:,:,1)));
+index = findLocalMaxima(a_n_toplot, -50);
+plotImage(flags.phi, flags.theta, a_n_toplot, [-40; -100]);
+hold on; plot(flags.phi(index(2)), flags.theta(index(1)), 'r*');
+title('LOS angular amplitude'); xlabel('phi'); ylabel('theta');
 disp('LOS model');
 disp('------------------------------------');
 
 %% Get the Wideband domain - NLOS
 [HtMat_NLOS] = get_wideBand_reduceBW(data_NLOS.Data, flags);
 a_n_mat_NLOS = calc_a_n(HtMat_NLOS, flags);
-plotImage(flags.phi, flags.theta, 20*log10(abs(a_n_mat_NLOS(:,:,1))), [-40; -100])
+a_n_toplot = 20*log10(abs(a_n_mat_NLOS(:,:,1)));
+index = findLocalMaxima(a_n_toplot, -50);
+plotImage(flags.phi, flags.theta, a_n_toplot, [-40; -100]);
+title('NLOS angular amplitude'); xlabel('phi'); ylabel('theta');
 disp('NLOS model');
 disp('------------------------------------');
 

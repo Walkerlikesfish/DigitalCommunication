@@ -37,7 +37,7 @@ for idx=1:length(flags.dz_list)
     Rdx(idx) = cur_rdx;
 end
 
-figure(1);plot(flags.dz_list,abs(Rdx));title('Spatial Correlation on X direction');
+figure(1);plot(flags.dz_list/lamda,abs(Rdx));title('Spatial Correlation on X direction');
 xlabel('Distance (m)');ylabel('R(dx)');
 
 gama_record = [];
@@ -71,7 +71,7 @@ for idy=1:length(flags.dz_list)
     Rdy(idy) = cur_rdy;
 end
 
-figure(2);plot(flags.dz_list,abs(Rdy));title('Spatial Correlation on Y direction');
+figure(2);plot(flags.dz_list/lamda,abs(Rdy));title('Spatial Correlation on Y direction');
 xlabel('Distance (m)');ylabel('R(dx)');
 
 end
