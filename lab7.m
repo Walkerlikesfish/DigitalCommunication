@@ -35,6 +35,8 @@ disp('------------------------------------');
 %% Get the Wideband domain - LOS
 [HtMat_LOS] = get_wideBand_reduceBW(data_LOS.Data, flags);
 a_n_mat_LOS = calc_a_n(HtMat_LOS, flags);
+% narrowband is just the sum of the taps
+a_narrow_LOS = sum(a_n_mat_LOS,3);
 a_n_toplot = 20*log10(abs(a_n_mat_LOS(:,:,1)));
 index = findLocalMaxima(a_n_toplot, -50);
 plotImage(flags.phi, flags.theta, a_n_toplot, [-40; -100]);
@@ -46,6 +48,8 @@ disp('------------------------------------');
 %% Get the Wideband domain - NLOS
 [HtMat_NLOS] = get_wideBand_reduceBW(data_NLOS.Data, flags);
 a_n_mat_NLOS = calc_a_n(HtMat_NLOS, flags);
+% narrowband sum up the taps
+a_narrow_NLOS = sum(a_n_mat_NLOS, 3);
 a_n_toplot = 20*log10(abs(a_n_mat_NLOS(:,:,1)));
 index = findLocalMaxima(a_n_toplot, -50);
 plotImage(flags.phi, flags.theta, a_n_toplot, [-40; -100]);
@@ -62,14 +66,21 @@ save('h_mpc.mat','mpc_h');
 disp('Generating the h_i');
 disp('------------------------------------');
 
-%% Spatial correlation Z direction
+%% Spatial correlation Z direction - Wideband
 cur_tap = 1;
 [Rdz_LOS] = calc_spatial_corr_Z(a_n_mat_LOS, flags, cur_tap);
 [Rdz_NLOS] = calc_spatial_corr_Z(a_n_mat_NLOS, flags, cur_tap);
-
-%% Spatial correlation X & Y direction
+%% Spatial correlation X & Y direction - Wideband
 [Rdx_LOS, Rdy_LOS] = calc_spatial_corr_XY(a_n_mat_LOS, flags, cur_tap);
 [Rdx_NLOS, Rdy_NLOS] = calc_spatial_corr_XY(a_n_mat_NLOS, flags, cur_tap);
+
+%% Spatial correlation Z direction - Narrowband
+[Rdz_LOS] = calc_spatial_corr_Z(a_narrow_LOS, flags, cur_tap);
+[Rdz_NLOS] = calc_spatial_corr_Z(a_narrow_NLOS, flags, cur_tap);
+%% Spatial correlation X & Y direction - Narrowband
+[Rdx_LOS, Rdy_LOS] = calc_spatial_corr_XY(a_narrow_LOS, flags, cur_tap);
+[Rdx_NLOS, Rdy_NLOS] = calc_spatial_corr_XY(a_narrow_NLOS, flags, cur_tap);
+
 
 %% Questions
 %[1] Beamforming funciton explain

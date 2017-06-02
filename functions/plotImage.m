@@ -3,7 +3,7 @@ function plotImage(phi, teta, angularSpectrum, limitAmp)
 %limitAmp: max and min on first step
     crsz = get(0,'ScreenSize');
     fig = figure ;
-    panoramicPicture = imread(sprintf('pictureLab2.JPG'));
+    panoramicPicture = imread(sprintf('misc/pictureLab2.JPG'));
     im = image(phi,teta,panoramicPicture) ;
     hold on;
     axis image

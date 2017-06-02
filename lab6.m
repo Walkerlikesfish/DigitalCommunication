@@ -2,6 +2,8 @@
 % VUB BRUFACE
 % Yu Liu, Bohan Zhang, Xianjun Mao
 % 
+% Lab 6 
+% CFO Acquisition and Tracking
 %% setting of the basic parameters
 clear all
 addpath('functions/');

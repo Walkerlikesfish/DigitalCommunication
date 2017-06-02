@@ -1,7 +1,7 @@
 function [Rdx, Rdy] = calc_spatial_corr_XY(a_n, flags, cur_tap)
 
 lamda = 3e8 / flags.f_c; %wavelength of the carrier 
-flags.dz_list = [0:lamda/20:lamda*2];
+flags.dz_list = [0:lamda/20:lamda*4];
 beta_s = 2*pi/lamda;
 
 tmp_theta_phi = zeros(length(flags.theta), length(flags.phi));
@@ -27,7 +27,12 @@ for idx=1:length(flags.dz_list)
             end
             
             cur_u = beta_s * cos(cur_gama);
-            tmpv = abs(a_n(itheta, iphi, cur_tap))^2 * exp(1j*cur_u*cur_dx);
+            if size(size(a_n),2) == 3
+                 tmpv = abs(a_n(itheta, iphi, cur_tap))^2 * exp(1j*cur_u*cur_dx);
+            else if size(size(a_n),2) == 2
+                     tmpv = abs(a_n(itheta, iphi))^2 * exp(1j*cur_u*cur_dx);
+                end
+            end
             
             tmpv_record(gama_ind) = tmpv_record(gama_ind) + tmpv;
             cnt_tmpv(gama_ind) = cnt_tmpv(gama_ind) + 1; % counting the possible overlaps
@@ -38,7 +43,7 @@ for idx=1:length(flags.dz_list)
 end
 
 figure(1);plot(flags.dz_list/lamda,abs(Rdx));title('Spatial Correlation on X direction');
-xlabel('Distance (m)');ylabel('R(dx)');
+xlabel('Distance (lamda)');ylabel('R(dx)');
 
 gama_record = [];
 tmpv_record = zeros(1, length(flags.theta)*length(flags.phi));
@@ -61,7 +66,12 @@ for idy=1:length(flags.dz_list)
             end
             
             cur_u = beta_s * cos(cur_gama);
-            tmpv = abs(a_n(itheta, iphi, cur_tap))^2 * exp(1j*cur_u*cur_dx);
+            if size(size(a_n),2) == 3
+                 tmpv = abs(a_n(itheta, iphi, cur_tap))^2 * exp(1j*cur_u*cur_dx);
+            else if size(size(a_n),2) == 2
+                     tmpv = abs(a_n(itheta, iphi))^2 * exp(1j*cur_u*cur_dx);
+                end
+            end
             
             tmpv_record(gama_ind) = tmpv_record(gama_ind) + tmpv;
             cnt_tmpv(gama_ind) = cnt_tmpv(gama_ind) + 1; % counting the possible overlaps
@@ -72,7 +82,7 @@ for idy=1:length(flags.dz_list)
 end
 
 figure(2);plot(flags.dz_list/lamda,abs(Rdy));title('Spatial Correlation on Y direction');
-xlabel('Distance (m)');ylabel('R(dx)');
+xlabel('Distance (lamda)');ylabel('R(dx)');
 
 end
 

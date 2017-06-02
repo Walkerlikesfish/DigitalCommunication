@@ -41,8 +41,11 @@ flags.pilot_channel = [-21,-7,7,21];
 % the selected_channels indicate which channel(receiver) is activated in
 % the simulation. As the receiver matrix is 10x10x10, we use 3 decimal
 % digits to indicate the id of the receiver
-flags.selected_channels = [111,131,142,153,164,175];
-
+flags.selected_channels = [131];
+%flags.selected_channels = [111,131,142,153];
+%flags.selected_channels = [111,131,142,153,164];
+%flags.selected_channels = [111,131,142,153,164,175];
+%flags.selected_channels = [111,131,142,153,164,175,186,191,123];
 %% [Transmitter] - Generate the source messages
 
 [symbol_cp_s, bits_tx] = SISO_transmitter(flags);
@@ -62,56 +65,10 @@ flags.AWGN = 1;
 flags.EbN0i = 50;
 flags.STO = 1; % turn on the STO
 flags.timeshift = 1; % set STO 
-flags.f_tx = 50; % transmitter frequency shift unit[Hz]
-
-%% [Channel + receiver] iterate through CFO
-scan_CFO = [0:1000:50000];
-for ii=1:50
-    flags.f_tx = scan_CFO(ii);
-    
-    [ach_bits_mo] = SIMO_channel(symbol_cp_s, flags);
-    ach_bits = ach_bits_mo(1,:); 
-    % [Receiver] - Time acquisition
-    [t_est, ach_bits] = SISO_estimate_STO(ach_bits, flags);
-    % [Receiver] - CFO acquisition
-    [df_est, ach_bits] = SISO_estimate_CFO(ach_bits, flags);
-    % [Receiver] - Channel estimation independently for each receiver
-    n_channels = length(flags.selected_channels);
-    hf_est_mo = [];
-    ach_bits_mo_np = [];  % the bits stream after clipping the preamables
-    for ic=1:n_channels
-        cur_cid = flags.selected_channels(ic);
-        id_channel = [floor(cur_cid/100), floor(mod(cur_cid,100)/10), mod(cur_cid,10)];
-        % estimate the channel function
-        cur_ach_bits = ach_bits_mo(ic,:);
-        [cur_hf_est] = SISO_ZF_estimator(cur_ach_bits, flags);
-        hf_est_mo = [hf_est_mo; cur_hf_est];
-        % extract the singal clipping the head
-        cur_ach_bits = cur_ach_bits(1,(flags.N_subcarr+flags.N_cp)*2+1: end);
-        ach_bits_mo_np = [ach_bits_mo_np; cur_ach_bits];
-    end
-    % [Receiver] - Equalizer
-    [arec_bits] = SIMO_receiver(ach_bits_mo_np, hf_est_mo, flags, 0);
-
-    % [Result]
-    bits_rx = arec_bits;
-    howcorrect=(bits_tx==bits_rx);        % check the original signal and the processed signal is equal or not
-    BER(ii) = 1-(sum(howcorrect)/flags.Nbits);
-    
-    disp(['processed  ' num2str(ii) '/' num2str(length(scan_CFO))])
-end
-
-figure(2)
-semilogy(scan_CFO(1:50), BER,'-gx');
-hold on;    
-xlabel('CFO (Hz)');
-ylabel('Bit Error Rate (BER)');
-title('BER vs CFO');
-legend('Modulation 64QAM');
-grid on   
+flags.f_tx = 10; % transmitter frequency shift unit[Hz]
 
 %% [EbN0]
-flags.EbN0 = -20:30;     % EbN0 interval
+flags.EbN0 = -20:40;     % EbN0 interval
 
 flags.MPCchoice = 1; % the choice for MPC model: 0:LOS; 1:NLOS; -1:No channel
 
@@ -153,7 +110,7 @@ end
 
 % decide if you want to overlap the figure or not
 figure(3)
-semilogy(flags.EbN0, BER_SIMO,'-ro');
+semilogy(flags.EbN0, BER_SIMO,'-kx');
 hold on;    
 xlabel('Eb/N0 (dB)');
 ylabel('Bit Error Rate (BER)');

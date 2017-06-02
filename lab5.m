@@ -2,6 +2,8 @@
 % VUB BRUFACE
 % Yu Liu, Bohan Zhang, Xianjun Mao
 % 
+% Lab 5 Time Shifting Offest 
+% 
 %% setting of the basic parameters
 clear all
 addpath('functions/');
@@ -85,7 +87,6 @@ grid on
 
 %% Questions
 
-%% backup
 %% Test
 % flags.EbN0i = 300;
 % flags.timeshift = 10;
