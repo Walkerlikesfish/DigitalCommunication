@@ -1,0 +1,16 @@
+[Lab1] - channel PDP
+1. Why f_c reduce when we filter the original 200Mhz signal to 20Mhz signal with different filters.
+
+[Lab2] - channel statistical model
+1. What cause the K distribution across the taps? -> the transmitter characteristics ?
+
+[Lab3] - Channel equalisation
+1. Discuss the impact of the channel parameters (f_c, tau) to blcksize?
+
+[Lab4] - Channel estimation
+
+
+
+[Lab5]
+
+[Lab6]

@@ -6,6 +6,8 @@
 % Channel model statistical estimation
 %% Init
 clear all
+addpath('functions/');
+addpath('misc/');
 
 flags.N_line = 10; % how many points in a line 
 flags.N_bins = 501; % the number of bins

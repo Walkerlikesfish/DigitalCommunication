@@ -19,7 +19,6 @@ cur_lpf = lpf_tukey.';
 
 % only take the first *flags.max_taps* taps
 for ii=1:flags.tap_max
-    ii
     cur_vec = HtMat(:,:,:,ii);
     cur_vec = reshape(abs(cur_vec),1000,1);
     rayl_fit = fitdist(cur_vec,'rayleigh');
@@ -27,7 +26,8 @@ for ii=1:flags.tap_max
     rayl.B(ii) = rayl_fit.B;
     rice.S(ii) = rice_fit.s;
     rice.Sigma(ii) = rice_fit.sigma;
-    rice.K(ii) = rice.S(ii)^2 / (2 * rice.Sigma(ii)^2)
+    %rice.K(ii) = 10*log10(rice.S(ii)^2 / (2 * rice.Sigma(ii)^2))
+    rice.K(ii) = (rice.S(ii)^2 / (2 * rice.Sigma(ii)^2))
 end
 
 end

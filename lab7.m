@@ -4,7 +4,8 @@
 % 
 %% Parameters
 clear all
-close all
+addpath('functions/');
+addpath('misc/');
 % ------------ basics --------------- %
 flags.N_line = 10; % how many points in a line 
 flags.N_bins = 501; % the number of bins

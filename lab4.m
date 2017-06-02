@@ -2,10 +2,12 @@
 % VUB BRUFACE
 % Yu Liu, Bohan Zhang, Xianjun Mao
 % 
-%% setting of the basic parameters
+% Lab4 - Channel estimation
+% NO CFO, NO SCO, only have to estimate the channel
 %% setting of the basic parameters
 clear all
-close all;
+addpath('functions/');
+addpath('misc/');
 % [Basic Settings]
 flags.Nbits = 1024*60;   % number of total bits ready to send
 flags.f_c = 2.35e9;      % carrier frequency = 2.35Ghz
