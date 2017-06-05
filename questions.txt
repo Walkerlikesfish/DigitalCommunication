@@ -5,19 +5,17 @@
 1. What cause the K distribution across the taps? -> the transmitter characteristics ?
 
 [Lab3] - Channel equalisation
-1. Discuss the impact of the channel parameters (f_c, tau) to blcksize?
+1. Discuss the impact of the channel parameters (f_c, tau) to blcksize? 
+	- Efficiency 
 
 [Lab4] - Channel estimation
-1. Time domain estimation
+1. Time domain estimation [half killed]
 
 [Lab5] - SCO
-1. Cyclic prefix introduces unwanted effect what is that and how to fix it ?
-
-[Lab6] - CFO
-Cool
+1. Cyclic prefix introduces unwanted effect what is that and how to fix it ? [Done]
 
 [Lab7] SIMO-channel
-1. Spatial correlation
+1. Spatial correlation [Not too much]
 
 [Lab8] SIMO 
 1. MRC compared to simple combination

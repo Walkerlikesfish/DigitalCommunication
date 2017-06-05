@@ -9,8 +9,7 @@ function [rayl, rice] = fit_wideb(data, flags)
 
 % filter the signal to get the 20Mhz signal
 N_windows = ceil(flags.N_bins * flags.BW2_prop);
-tukey_alpha = 0.5;
-mid = floor(flags.N_bins/2);
+tukey_alpha = 0.8;
 % Rectangular window
 lpf_tukey = tukeywin(N_windows, tukey_alpha);
 cur_lpf = lpf_tukey.';

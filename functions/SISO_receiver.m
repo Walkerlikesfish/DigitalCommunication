@@ -17,15 +17,19 @@ len_p = size(r_symbol_t,2);
 
 %% TD h(t) equalisation
 if flags.tdEQ == 1
+    h_tf = fft(flags.MPCTD, flags.N_subcarr);
+    r_symbol_sp_te = zeros(size(r_symbol_t));
     for ii=1:len_p
         cur_t = r_symbol_t(:,ii);
-        cur_ta = inv(flags.MPCTD) * cur_t;
-        r_symbol_t(:,ii) = cur_ta;
+        cur_tf = fft(cur_t);
+        r_symbol_sp_te(:,ii) = cur_tf ./ h_tf;
     end
 end
 
 %% FD equalisation
 % FFT
+flags.tdEQ = 0;
+
 for ii=1:len_p
     cur_t = r_symbol_t(:,ii);
     cur_f = fft(cur_t);
@@ -79,8 +83,13 @@ if flags.CFO == 1
         r_symbol_sp(:,ii) = cur_symbol;
     end
 end
+
 %% the rest
 % P/S
+if flags.tdEQ == 1
+    r_symbol_sp = r_symbol_sp_te;
+end
+
 r_symbol_f = reshape(r_symbol_sp, 1, []);
 r_symbol_R = real(r_symbol_f);
 r_symbol_I = imag(r_symbol_f);
@@ -95,6 +104,5 @@ bits_rx = reshape(bits_rx, 1, []);
 bits_rx = bits_rx.';
 
 arec_bits = bits_rx;
-
 end
 

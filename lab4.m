@@ -17,7 +17,7 @@ flags.N_subcarr = 64;    % number of sub carriers
 flags.N_cp = 16;         % length of Cyclic prefix length
 % [AWGN Settings]
 flags.AWGN = 1;          % shall we turn on the AWGN channel ? 1-yes;0-no
-flags.EbN0 = -50:50;     % EbN0 interval
+flags.EbN0 = -30:50;     % EbN0 interval
 % [MPC settings]
 ht = load('impulse_response.mat');
 flags.MPCht = ht.ht;
@@ -33,7 +33,7 @@ flags.timeshift = 1; % set the time shifting (unit:[bit])
 flags.N_averageWindow = flags.N_cp*2;
 % [CFO]
 flags.CFO = 0; % [switch] for CFO: 0-OFF/ 1-ON
-flags.f_tx = 10; % transmitter frequency shift unit[Hz]
+flags.f_tx = 0; % transmitter frequency shift unit[Hz]
 flags.pilot_channel = [-21,-7,7,21];
 
 %% [Transmitter]
@@ -50,7 +50,7 @@ end
 
 %% [Channel+Receiver] scan throught the EbN0
 flags.MPCchoice = 1; % the choice for MPC model: 0:LOS; 1:NLOS; -1:No channel
-
+flags.tdEQ = 1; % [switch] for time domain equalisation : 0-OFF/ 1-ON
 flags.AWGN = 1; 
 BER = zeros(length(flags.EbN0),1);
 disp('A little bit patience is required...')
@@ -66,7 +66,7 @@ end
 
 % decide if you want to overlap the figure or not
 figure(3)
-semilogy(flags.EbN0, BER,'-gx');
+semilogy(flags.EbN0, BER,'-rx');
 hold on;    
 xlabel('Eb/N0 (dB)');
 ylabel('Bit Error Rate (BER)');
@@ -75,16 +75,20 @@ legend('Modulation 64QAM');
 grid on   
 
 %% [Test]
-% flags.EbN0i = 50;
-% [ach_bits] = SISO_channel(symbol_cp_s, flags);
-% % [Receiver] 
-% % [Receiver - Estimate the channel]
-% [hf_est] = SISO_ZF_estimator(ach_bits, flags);
-% [ht_est] = SISO_TD_estimator(ach_bits, flags);
-% 
-% flags.MPCZF = hf_est;
-% % [Receiver - Equalisation and estimation]
-% % [arec_bits] = SISO_receiver(ach_bits, flags, 0);
+flags.tdEQ = 0;
+flags.EbN0i = 50;
+[ach_bits] = SISO_channel(symbol_cp_s, flags);
+% [Receiver] 
+% [Receiver - Estimate the channel]
+[hf_est] = SISO_ZF_estimator(ach_bits, flags);
+% estimating in time domain
+[ht_est] = SISO_TD_estimator(ach_bits, flags);
+flags.MPCZF = hf_est; % set the estimated channel to global var
+flags.MPCTD = ht_est;
+
+ach_bits = ach_bits(1,(flags.N_subcarr+flags.N_cp)*2+1: end);
+% [Receiver - Equalisation and estimation]
+[arec_bits] = SISO_receiver(ach_bits, flags, 1);
 
 
 %% Questions

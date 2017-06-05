@@ -1,7 +1,10 @@
-function [arec_bits] = f_SISO_simulation(symbol_cp_s, flags)
+function [arec_bits] = f_SISO_simulation(symbol_cp_s, flags, verbal)
 % f_SIMO_simulation is designed to wrap all simulation together into one
 % funciton, simulation from the input_symbol to the bits stream at the
 % receiver end.
+if nargin < 3
+    verbal = 0;
+end
 
 [ach_bits] = SISO_channel(symbol_cp_s, flags);
 % [Receiver] - Time acquisition
@@ -26,7 +29,7 @@ if flags.preamble_yes == 1
     ach_bits = ach_bits(1,(flags.N_subcarr+flags.N_cp)*2+1: end);
 end
 % [Receiver] - Equalisation
-[arec_bits] = SISO_receiver(ach_bits, flags, 1);
+[arec_bits] = SISO_receiver(ach_bits, flags, verbal);
 
 end
 
