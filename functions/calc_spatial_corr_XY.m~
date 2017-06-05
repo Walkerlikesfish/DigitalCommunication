@@ -86,7 +86,7 @@ for idy=1:length(flags.dz_list)
             cnt_tmpv(gama_ind) = cnt_tmpv(gama_ind) + 1; % counting the possible overlaps
         end
     end
-    cur_rdy = sum(nonzeros(tmpv_record(1:900))./nonzeros(cnt_tmpv(1:900)));
+    cur_rdy = sum(nonzeros(tmpv_record))./nonzeros(cnt_tmpv));
     Rdy(idy) = cur_rdy;
 end
 

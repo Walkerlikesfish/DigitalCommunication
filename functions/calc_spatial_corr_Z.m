@@ -1,7 +1,7 @@
 function [Rdz] = calc_spatial_corr_Z(a_n, flags, cur_tap)
 
 lamda = 3e8 / flags.f_c; %wavelength of the carrier 
-flags.dz_list = [0:lamda/20:lamda*2];
+flags.dz_list = [0:lamda/20:lamda*5];
 Rdz = zeros(1, length(flags.dz_list));
 
 beta_s = 2*pi/lamda;
@@ -29,8 +29,17 @@ for idz=1:length(flags.dz_list)
     Rdz(idz)=Rdz(idz) + cur_rdz;
 end
 
-figure;plot(flags.dz_list/lamda,abs(Rdz));title('Spatial Correlation on Z direction');
+%Normalize
+Rdz_to_plot = real(Rdz);
+coef = 1/Rdz_to_plot(1);
+Rdz_to_plot = Rdz_to_plot .* coef;
+
+figure(1);plot(flags.dz_list/lamda,real(Rdz_to_plot));title('Spatial Correlation on Z direction');
 xlabel('Distance (x lamda)');ylabel('R(dz)');
+hold on
+
+ref_line = zeros(1,length(flags.dz_list));
+plot(flags.dz_list/lamda,ref_line, '-.')
 
 end
 
