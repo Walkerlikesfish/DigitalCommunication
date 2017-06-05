@@ -17,7 +17,7 @@ flags.N_subcarr = 64;    % number of sub carriers
 flags.N_cp = 16;         % length of Cyclic prefix length
 % [AWGN Settings]
 flags.AWGN = 1;          % shall we turn on the AWGN channel ? 1-yes;0-no
-flags.EbN0 = -30:50;     % EbN0 interval
+flags.EbN0 = -50:50;     % EbN0 interval
 % [MPC settings]
 ht = load('impulse_response.mat');
 flags.MPCht = ht.ht;
@@ -52,7 +52,9 @@ end
 flags.MPCchoice = 1; % the choice for MPC model: 0:LOS; 1:NLOS; -1:No channel
 flags.tdEQ = 1; % [switch] for time domain equalisation : 0-OFF/ 1-ON
 flags.AWGN = 1; 
-BER = zeros(length(flags.EbN0),1);
+global NMSErec;
+NMSErec = zeros(length(flags.EbN0),1); % used to record the NMSE vs EbN0
+BER = zeros(length(flags.EbN0),1); % used to record the BER vs EbN0
 disp('A little bit patience is required...')
 for ii=1:length(flags.EbN0)
     % [Channel] AWGN
@@ -72,7 +74,14 @@ xlabel('Eb/N0 (dB)');
 ylabel('Bit Error Rate (BER)');
 title('BER vs EbN0');
 legend('Modulation 64QAM');
-grid on   
+grid on
+%%
+figure(2)
+hold on
+plot(flags.EbN0(1:20),10*log10(NMSErec(1:20)), 'r-x');
+xlabel('Eb/N0 (dB)');
+ylabel('NMSE(dB)');
+
 
 %% [Test]
 flags.tdEQ = 0;

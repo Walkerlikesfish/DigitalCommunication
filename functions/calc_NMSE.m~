@@ -1,0 +1,14 @@
+function [nmse] = calc_NMSE(h_est, h_ori)
+%CALC_NMSE is the function to calculate the n mean square error
+% input:
+%   - h_est: estimated transfer function
+%   - h_ori: original transfer function
+% output:
+%   - nmse: NMSE
+
+nmse = 0;
+n = length(h_est);
+for ii = 
+
+end
+

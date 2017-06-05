@@ -6,6 +6,7 @@ if nargin < 3
     verbal = 0;
 end
 
+global NMSErec;
 [ach_bits] = SISO_channel(symbol_cp_s, flags);
 % [Receiver] - Time acquisition
 if flags.STO
@@ -25,6 +26,19 @@ if flags.preamble_yes == 1
     [ht_est] = SISO_TD_estimator(ach_bits, flags);
     flags.MPCZF = hf_est; % set the estimated channel to global var
     flags.MPCTD = ht_est;
+    % calculate and record the NMSE
+    if flags.MPCchoice == 0
+        ht = flags.MPCht.h_LOS_rice;
+    elseif flags.MPCchoice == 1
+        ht = flags.MPCht.h_NLOS_rayl;   
+    end
+    hf_ori = fft(ht, flags.N_subcarr);
+    if flags.tdEQ == 0
+        htf_est = hf_est;
+    else
+        htf_est = fft(ht_est, flags.N_subcarr);
+    end
+    NMSErec(flags.EbN0i) = calc_NMSE(htf_est, hf_ori); % record the NMSE
     % extract the preamble from the signals
     ach_bits = ach_bits(1,(flags.N_subcarr+flags.N_cp)*2+1: end);
 end
