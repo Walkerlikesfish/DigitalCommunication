@@ -15,9 +15,13 @@ PDPMat = PDPMat./(flags.N_line^3);
 PDPMat_cut = PDPMat(locmax:locmax+flags.N_pts-1); % clip the responce
 PDPMat_cut_db = 10*log10(PDPMat_cut); % adapt unit to dB
 
+x_axis = [1:length(PDPMat_cut_db)] .* flags.dt;
+
 figure
-plot(PDPMat_cut_db)
+plot(x_axis,PDPMat_cut_db)
 title('Power Delay Profile - Original')
+xlabel('delay (s)')
+ylabel('PDP (dB)')
 
 % estimate coherence frequency
 f_coher = calc_fcohr(PDPMat_cut, flags.dt);

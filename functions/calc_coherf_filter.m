@@ -22,12 +22,18 @@ end
 [HtMatAmp, PDPMat] = calc_PDP(HtMat, flags.N_line, N_bins_f);
 PDPMat = PDPMat./(flags.N_line^3);
 
+
 % Plot figure
 [~,locmax] = max(PDPMat);
 PDPMat_cut_rec = PDPMat(locmax:end-10);
 PDPMat_cut_db_rec = 10*log10(PDPMat_cut_rec);
+
+x_axis = [1:length(PDPMat_cut_rec)] .* flags.dt;
+
 figure
-plot(PDPMat_cut_db_rec)
+plot(x_axis,PDPMat_cut_db_rec)
+xlabel('delay (s)')
+ylabel('PDP (dB)')
 
 f_coher = calc_fcohr(PDPMat_cut_rec, flags.dt/flags.BW2_prop);
 PDPMat_cut = PDPMat_cut_rec;
